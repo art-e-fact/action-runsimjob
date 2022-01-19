@@ -12,7 +12,7 @@ inputs:
   job_timeout:
     description: 'maximum time to wait for job completion'
     required: false
-    default: 120
+    default: 180
 outputs:
   job-id:
     description: "Simulaton job id"
@@ -37,5 +37,5 @@ runs:
       env:
         API_URL: ${{ inputs.api_url }}
       run: |
-        timeout ${{ inputs.job_timeout}} ${{ github.action_path }}/poll.sh --url="${API_URL}/checkjob?job_id=${JOBID}" --interval="30"
+        timeout ${{ inputs.job_timeout}} ${{ github.action_path }}/poll.sh --url="${API_URL}/checkjob?account_id=${ACCOUNT_ID}&job_id=${JOBID}" --interval="30"
       shell: bash
