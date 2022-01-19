@@ -11,6 +11,7 @@ while test $# -gt 0; do
       echo "--url=URL            url to poll"
       echo "--interval=INTERVAL  Interval between each call, in seconds"
       echo "--timeout=TIMEOUT    Timeout before stop polling, in seconds"
+      echo "--api_key=API_KEY    CI API Key"
       exit 0
       ;;
     --url*)
@@ -19,6 +20,10 @@ while test $# -gt 0; do
       ;;
     --interval*)
       interval=`echo $1 | sed -e 's/^[^=]*=//g'`
+      shift
+      ;;
+    --api_key*)
+      api_key=`echo $1 | sed -e 's/^[^=]*=//g'`
       shift
       ;;
     *)
@@ -30,7 +35,7 @@ done
 function poll_status {
   while true;
   do
-    status=$(curl $url -s | jq  -r '.status');
+    status=$(curl $url -s -H "x-api-key: $api_key"| jq  -r '.status');
     echo "$(date +%H:%M:%S): status is $status";
     if [ "$status" == "FAILED" ]; then
       echo "Job failed!"
