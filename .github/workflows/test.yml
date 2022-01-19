@@ -1,0 +1,11 @@
+on: [push]
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          account_id: action_test
+          api_url: 'https://k2ofrz3mg3.execute-api.ap-northeast-1.amazonaws.com/staging'

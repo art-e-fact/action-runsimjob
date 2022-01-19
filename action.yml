@@ -1,0 +1,41 @@
+name: 'runsimjob'
+description: 'Run Simulation job'
+inputs:
+  account_id:  # id of input
+    description: 'CI account id'
+    required: true
+    default: 'action_test'
+  api_url:
+    description: 'WARP CI API url'
+    required: false
+    default: 'https://k2ofrz3mg3.execute-api.ap-northeast-1.amazonaws.com/staging'
+  job_timeout:
+    description: 'maximum time to wait for job completion'
+    required: false
+    default: 120
+outputs:
+  job-id:
+    description: "Simulaton job id"
+    value: ${{ steps.start-job.outputs.job-id }}
+runs:
+  using: "composite"
+  steps:
+    - name: Start Simulation Job
+      id: start-job
+      env:
+        API_URL: ${{ inputs.api_url }}
+        ACCOUNT_ID: ${{ inputs.account_id }}
+      run: |
+        curl -X GET ${API_URL}/runjob?account_id=${ACCOUNT_ID} > job.json
+        cat job.json
+        export JOBID=$(cat job.json | jq -r ".jobId")
+        echo "JOBID=$JOBID" >> $GITHUB_ENV
+        echo $JOBID
+        echo "::set-output name=job-id::$(echo $JOBID)"
+      shell: bash
+    - name: Check Job Status
+      env:
+        API_URL: ${{ inputs.api_url }}
+      run: |
+        timeout ${{ inputs.job_timeout}} ${{ github.action_path }}/poll.sh --url="${API_URL}/checkjob?job_id=${JOBID}" --interval="30"
+      shell: bash
