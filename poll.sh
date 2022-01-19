@@ -46,6 +46,7 @@ function poll_status {
     fi
     if [ "$status" == "RUNNING" ]; then
       echo "Job started"
+      exit 0;
     fi
     if [ "$status" == "SUCCEEDED" ]; then
       echo "Job done"
