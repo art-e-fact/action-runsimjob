@@ -44,6 +44,9 @@ function poll_status {
     if [ "$status" == "RUNNABLE" ]; then
       echo "Job in queue!"
     fi
+    if [ "$status" == "STARTING" ]; then
+      echo "Job starting"
+    fi
     if [ "$status" == "RUNNING" ]; then
       echo "Job started"
       exit 0;

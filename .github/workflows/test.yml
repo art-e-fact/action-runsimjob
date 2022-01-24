@@ -11,3 +11,4 @@ jobs:
           api_url: 'https://k2ofrz3mg3.execute-api.ap-northeast-1.amazonaws.com/staging'
           api_key: ${{ secrets.CI_API_KEY}}
           cmd: "nvidia-smi"
+          job_timeout: 300

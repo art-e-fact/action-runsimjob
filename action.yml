@@ -15,7 +15,7 @@ inputs:
   job_timeout:
     description: 'maximum time to wait for job completion'
     required: false
-    default: 200
+    default: 300
   cmd:
     description: 'Command override for container'
     required: false
