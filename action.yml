@@ -16,6 +16,10 @@ inputs:
     description: 'maximum time to wait for job completion'
     required: false
     default: 200
+  cmd:
+    description: 'Command override for container'
+    required: false
+    default: ""
 outputs:
   job-id:
     description: "Simulaton job id"
@@ -29,7 +33,7 @@ runs:
         API_URL: ${{ inputs.api_url }}
         ACCOUNT_ID: ${{ inputs.account_id }}
       run: |
-        curl -X GET ${API_URL}/runjob?account_id=${ACCOUNT_ID} -H "x-api-key: ${{ inputs.api_key }}" > job.json
+        curl -X GET ${API_URL}/runjob?account_id=${ACCOUNT_ID}&cmd=${{ inputs.cmd }} -H "x-api-key: ${{ inputs.api_key }}" > job.json
         cat job.json
         export JOBID=$(cat job.json | jq -r ".jobId")
         echo "JOBID=$JOBID" >> $GITHUB_ENV
