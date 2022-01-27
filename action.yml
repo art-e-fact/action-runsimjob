@@ -33,7 +33,9 @@ runs:
         API_URL: ${{ inputs.api_url }}
         ACCOUNT_ID: ${{ inputs.account_id }}
       run: |
-        curl -X GET "${API_URL}/runjob?account_id=${ACCOUNT_ID}&cmd=${{ inputs.cmd }}&ref=${GITHUB_REF}&sha=${GITHUB_SHA}" -H "x-api-key: ${{ inputs.api_key }}" > job.json
+        git_hash=$(git rev-parse --short "$GITHUB_SHA")
+        git_branch=${GITHUB_REF#refs/heads/}
+        curl -X GET "${API_URL}/runjob?account_id=${ACCOUNT_ID}&cmd=${{ inputs.cmd }}&gitbranch=${git_branch}&githash=${git_hash}" -H "x-api-key: ${{ inputs.api_key }}" > job.json
         cat job.json
         export JOBID=$(cat job.json | jq -r ".jobId")
         echo "JOBID=$JOBID" >> $GITHUB_ENV
