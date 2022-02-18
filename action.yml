@@ -1,6 +1,9 @@
 name: 'runsimjob'
 description: 'Run Simulation job'
 inputs:
+  warpci_config:
+    description: 'Jobs configuration specified in YAML'
+    required: true
   account_id:  # id of input
     description: 'CI account id'
     required: true
@@ -39,6 +42,7 @@ runs:
                    --data-urlencode "cmd=${{ inputs.cmd }}" \
                    --data-urlencode "gitbranch=${git_branch}" \
                    --data-urlencode "githash=${git_hash}" \
+                   --data-urlencode "configuration=${{inputs.warpci_config}}" \
               "${API_URL}/runjob" -H "x-api-key: ${{ inputs.api_key }}" > job.json
         export JOBID=$(cat job.json | jq -r ".jobId")
         echo "JOBID=$JOBID" >> $GITHUB_ENV
